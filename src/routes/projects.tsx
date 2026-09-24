@@ -1,0 +1,11 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { X } from "lucide-react";
+import { useState } from "react";
+import { images, PageHero, projects } from "../components/site";
+
+export const Route = createFileRoute("/projects")({ head: () => ({ meta: [
+  { title: "Projects — Abdul Moiez Mirza Architects" }, { name: "description", content: "Explore selected residential, commercial, sustainable, interior and conceptual architecture." },
+  { property: "og:title", content: "Projects — Abdul Moiez Mirza Architects" }, { property: "og:description", content: "Explore selected residential, commercial, sustainable, interior and conceptual architecture." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" },
+]}), component: Projects });
+
+function Projects() { const [active, setActive] = useState<(typeof projects)[number] | null>(null); const [filter,setFilter]=useState("All"); const cats=["All","Residential","Commercial","Sustainable","Interior","Conceptual","Modern Architecture"]; const shown=filter==="All"?projects:projects.filter(p=>p.category===filter); return <main><PageHero eyebrow="SELECTED WORK / 2020—2026" title="Places with purpose." image={images.residence} /><section className="portfolio"><div className="filters">{cats.map(c=><button key={c} onClick={()=>setFilter(c)} className={filter===c?"active":""}>{c}</button>)}</div><div className="masonry">{shown.map((p,i)=><button className={`portfolio-item reveal item-${i+1}`} onClick={()=>setActive(p)} key={p.name}><img src={p.image} alt={p.name} loading="lazy" width={1920} height={1080}/><span>{p.category} · {p.location}</span><h2>{p.name}</h2></button>)}</div></section>{active&&<div className="lightbox" role="dialog" aria-modal="true" aria-label={active.name}><button className="lightbox-close" onClick={()=>setActive(null)} aria-label="Close project"><X/></button><img src={active.image} alt={active.name}/><div><span>{active.category} · {active.location}</span><h2>{active.name}</h2><p>{active.description}</p></div></div>}</main> }
