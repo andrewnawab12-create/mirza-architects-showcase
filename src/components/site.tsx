@@ -47,10 +47,10 @@ export function Footer() {
 export function SiteLayout({ children }: { children: ReactNode }) {
   useEffect(() => {
     const observer = new IntersectionObserver(entries => entries.forEach(entry => entry.isIntersecting && entry.target.classList.add("visible")), { threshold: .12 });
-    document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
+    const revealTimer = window.setTimeout(() => document.querySelectorAll(".reveal").forEach(el => observer.observe(el)), 400);
     const move = (event: MouseEvent) => { document.documentElement.style.setProperty("--cursor-x", `${event.clientX}px`); document.documentElement.style.setProperty("--cursor-y", `${event.clientY}px`); };
     window.addEventListener("mousemove", move);
-    return () => { observer.disconnect(); window.removeEventListener("mousemove", move); };
+    return () => { window.clearTimeout(revealTimer); observer.disconnect(); window.removeEventListener("mousemove", move); };
   }, []);
   return <><div className="cursor-dot" /><Header />{children}<Footer /></>;
 }
