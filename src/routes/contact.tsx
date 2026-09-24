@@ -1,0 +1,10 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { ArrowUpRight } from "lucide-react";
+import { images, PageHero } from "../components/site";
+
+export const Route = createFileRoute("/contact")({ head: () => ({ meta: [
+  { title: "Contact — Abdul Moiez Mirza Architects" }, { name: "description", content: "Start an architecture or design project with our Islamabad studio." },
+  { property: "og:title", content: "Contact — Abdul Moiez Mirza Architects" }, { property: "og:description", content: "Start an architecture or design project with our Islamabad studio." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" },
+]}), component: Contact });
+
+function Contact() { return <main><PageHero eyebrow="START A PROJECT" title="Let’s create something enduring." image={images.renovation} /><section className="contact-page"><div className="contact-details reveal"><p className="eyebrow">ISLAMABAD / PAKISTAN</p><h2>Tell us where you want<br />to <em>begin.</em></h2><a href="mailto:studio@ammarchitects.pk">studio@ammarchitects.pk <ArrowUpRight /></a><div><small>STUDIO</small><p>Islamabad, Pakistan</p></div><div><small>PROJECTS</small><p>Residential · Commercial<br />Interiors · Planning</p></div></div><form className="contact-form reveal" onSubmit={e=>e.preventDefault()}><label>Name<input name="name" placeholder="Your name" required/></label><label>Email<input name="email" type="email" placeholder="you@example.com" required/></label><label>Project type<select name="type" defaultValue=""><option value="" disabled>Select a service</option><option>Residential Architecture</option><option>Commercial Architecture</option><option>Interior Design</option><option>Renovation</option><option>Other</option></select></label><label>Tell us about your project<textarea name="message" placeholder="Location, scope, aspirations, and timeline" rows={5} required/></label><button type="submit">SEND ENQUIRY <ArrowUpRight /></button></form></section></main> }
