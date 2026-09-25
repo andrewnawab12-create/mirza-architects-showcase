@@ -46,11 +46,15 @@ export function Footer() {
 
 export function SiteLayout({ children }: { children: ReactNode }) {
   useEffect(() => {
-    const observer = new IntersectionObserver(entries => entries.forEach(entry => entry.isIntersecting && entry.target.classList.add("visible")), { threshold: .12 });
-    const revealTimer = window.setTimeout(() => document.querySelectorAll(".reveal").forEach(el => observer.observe(el)), 400);
+    const observer = new IntersectionObserver(entries => entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add("visible"); observer.unobserve(entry.target); } }), { threshold: .05, rootMargin: "0px 0px -5% 0px" });
+    const scan = () => document.querySelectorAll(".reveal:not(.visible)").forEach(el => observer.observe(el));
+    scan();
+    const mo = new MutationObserver(scan);
+    mo.observe(document.body, { childList: true, subtree: true });
+    const fallback = window.setInterval(() => document.querySelectorAll(".reveal:not(.visible)").forEach(el => { const r = el.getBoundingClientRect(); if (r.top < window.innerHeight && r.bottom > 0) el.classList.add("visible"); }), 800);
     const move = (event: MouseEvent) => { document.documentElement.style.setProperty("--cursor-x", `${event.clientX}px`); document.documentElement.style.setProperty("--cursor-y", `${event.clientY}px`); };
     window.addEventListener("mousemove", move);
-    return () => { window.clearTimeout(revealTimer); observer.disconnect(); window.removeEventListener("mousemove", move); };
+    return () => { window.clearInterval(fallback); mo.disconnect(); observer.disconnect(); window.removeEventListener("mousemove", move); };
   }, []);
   return <><div className="cursor-dot" /><Header />{children}<Footer /></>;
 }
